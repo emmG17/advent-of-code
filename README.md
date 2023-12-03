@@ -36,7 +36,7 @@ The repository is organized by year and day. Each year has a separate folder, an
 1. Clone the repository to your local machine.
 
 ```bash
-git clone https://github.com/your-username/advent-of-code-challenges.git
+git clone https://github.com/emmG17/advent-of-code.git
 ```
 
 2. Navigate to the specific year and day you're interested in.
