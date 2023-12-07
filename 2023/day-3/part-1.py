@@ -1,56 +1,37 @@
-test_lines = '''467..114..
-...*......
-..35..633.
-......#...
-617*......
-.....+.58.
-..592.....
-......755.
-...$.*....
-.664.598..'''.split('\n')
-
 digits = "0123456789"
 forbidden = digits + "." 
 
-def crawl_left(col, row, line, matrix):
-    left = []
-    if col == 0:
-        return left
+def crawl(col, row, line, matrix, side) -> list:
+    result = []
     visited_cols = []
-    for i in range(col - 1, -1, -1):
+    breaking_point = 0 if side == "left" else len(line) - 1
+    start_iter = col - 1 if side == "left" else col + 1
+    max_iter = -1 if side == "left" else len(line)
+    iter_step = -1 if side == "left" else 1
+
+    if col == breaking_point:
+        return result
+    for i in range(start_iter, max_iter, iter_step):
         visited = matrix[row][i]["visited"]
         if line[i] in digits and not visited:
-            left.append(line[i])
+            result.append(line[i])
             visited_cols.append(i)
         else:
             break
+    for visited in visited_cols:
+        matrix[row][visited]["visited"] = True
 
-    for vistited in visited_cols:
-        matrix[row][vistited]["visited"] = True
-    left.reverse()
-    return left
+    if side == "left":
+        result.reverse()
+        return result
 
-def crawl_right(col, row, line, matrix):
-    right = []
-    if col == len(line) - 1:
-        return right
-    visited_cols = []
-    for i in range(col + 1, len(line)):
-        visited = matrix[row][i]["visited"]
-        if line[i] in digits and not visited:
-            right.append(line[i])
-            visited_cols.append(i)
-        else:
-            break
-    for vistited in visited_cols:
-        matrix[row][vistited]["visited"] = True
-    return right
+    return result
 
 def crawl_up(col, row, line, matrix):
     visited = matrix[row][col]["visited"]
     if line[col] in digits and not visited:
         matrix[row][col]["visited"] = True
-        return crawl_left(col, row, line, matrix) + [line[col]] + crawl_right(col, row, line, matrix)
+        return crawl(col, row, line, matrix, "left") + [line[col]] + crawl(col, row, line, matrix, "right")
     return
 
 def find_neighbors(node, lines):
