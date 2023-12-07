@@ -45,9 +45,9 @@ for i in range(len(cards)):
 
     for j in range(len(rewards[i][1])):
         if rewards[i][1][j] not in count_cards:
-            count_cards[rewards[i][1][j]] = 1 * count_cards[rewards[i][0]]
+            count_cards[rewards[i][1][j]] = count_cards[rewards[i][0]]
         else:
-            count_cards[rewards[i][1][j]] += 1 * count_cards[rewards[i][0]]
+            count_cards[rewards[i][1][j]] += count_cards[rewards[i][0]]
 
 print(sum(count_cards.values()))
 
