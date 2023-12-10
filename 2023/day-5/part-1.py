@@ -5,26 +5,28 @@ def parse_file(filename):
     return lines
 
 def seed_to_map(text):
-    maps_dict = {}
-    block_list = text.split('\n\n')
-    for i in range(len(block_list)):
-        if i == 0:
-            seed_list = block_list[i].split(': ')
-            title = seed_list[0].strip()
-            contents = [int(seed.strip()) for seed in seed_list[1].strip().split(' ')]
-            maps_dict[title] = contents
-        else:
-            title = block_list[i].replace(':', '').split(' ')[0].strip()
-            map_values = block_list[i].strip().split('\n')[1:]
-            contents = []
-            for line in map_values:
-                contents.append([ int(i) for i in line.split(' ')])
-            maps_dict[title] = contents
+    block_map = [] 
+    seed_list, *block_list = text.split('\n\n')
+    seed_list = list(map(int, seed_list.split(': ')[1].split(' ')))
 
-    return maps_dict
+    for block in block_list:
+        source_dest_ranges = []
+        for line in block.splitlines()[1:]:
+            source, dest, range_len = map(int, line.split())
+            source_dest_ranges.append([source, dest, range_len])
 
-    
+        mapped_seeds = []
+        for seed in seed_list:
+            for s, d, r in source_dest_ranges:
+                if d <= seed < d + r:
+                    mapped_seeds.append(seed - d + s)
+                    break;
+            else:
+                mapped_seeds.append(seed)
+        seed_list = mapped_seeds
+    return seed_list
 
-text = parse_file('test.txt')
-print(seed_to_map(text))
+almanac = parse_file('input.txt')
+mapped = seed_to_map(almanac)
+print(min(mapped))
 
